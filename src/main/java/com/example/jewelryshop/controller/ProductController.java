@@ -1,25 +1,54 @@
 package com.example.jewelryshop.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    private final Map<String, Product> products = new ConcurrentHashMap<>();
+
+    private Map<Long, Product> productMap = new HashMap<>();
+    private long currentId = 1;
 
     @PostMapping
-    public ResponseEntity<String> addProduct(@RequestBody Product product) {
-        products.put(product.getId(), product);
-        return ResponseEntity.ok("Product added successfully");
+    public void addProduct(@RequestBody Product product) {
+        product.setId(currentId++);
+        productMap.put(product.getId(), product);
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(new ArrayList<>(products.values()));
+    public List<Product> getAllProducts() {
+        return new ArrayList<>(productMap.values());
+    }
+}
+
+class Product {
+    private long id;
+    private String name;
+    private double price;
+
+    // Getters and Setters
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }
